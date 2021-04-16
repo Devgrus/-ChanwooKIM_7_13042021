@@ -1,4 +1,4 @@
-const Article = require('../models/article');
+const models = require('../models');
 const fs = require('fs');
 
 
@@ -50,7 +50,8 @@ exports.getOneArticle = (req, res, next) => {
 
 // Récupération de tous les articles
 exports.getAllArticles = (req, res, next) => {
-    Article.find()
-        .then(articles => res.status(200).json(articles))
-        .catch(error => res.status(400).json({error}));
+    models.Article.findAll()
+        .then(articles => {
+            return res.status(200).json(articles);
+        })
 };
