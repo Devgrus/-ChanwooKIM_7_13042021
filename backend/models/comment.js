@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
   Comment.init({
-    articleId: {
+    postId: {
       type: DataTypes.INTEGER,
       allowNull: false
     },
