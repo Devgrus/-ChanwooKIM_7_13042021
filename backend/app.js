@@ -3,10 +3,6 @@ const bodyParser = require('body-parser')
 const path = require('path');
 const cors = require('cors')
 
-//Importer les routes sauce et user
-//const sauceRoutes = require('./routes/sauce');
-//const userRoutes = require('./routes/user');
-
 const app = express();
 
 // Pour éviter les erreurs de CORS
@@ -24,10 +20,12 @@ app.disable('x-powered-by');
 // Utiliser le package <bodyParser>
 app.use(bodyParser.json());
 
+//Importer les routes post et user
 const postRoutes = require("./routes/post")
+const userRoutes = require('./routes/user');
 
-//app.use('/images', express.static(path.join(__dirname, 'images')));
-app.use('/api/post', postRoutes);
-//app.use('/api/auth', userRoutes);
+app.use('/images', express.static(path.join(__dirname, 'images')));
+app.use('/api/posts', postRoutes);
+app.use('/api/auth', userRoutes);
 
 module.exports = app;

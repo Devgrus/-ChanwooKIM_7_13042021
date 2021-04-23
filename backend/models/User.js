@@ -11,6 +11,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      models.User.hasMany(models.Post)
     }
   };
   User.init({
@@ -34,7 +35,6 @@ module.exports = (sequelize, DataTypes) => {
     isAdmin: {
         type: DataTypes.BOOLEAN,
         allowNull: false,
-        unique: true,
         defaultValue: false
     }
   }, {

@@ -1,22 +1,18 @@
 const models = require('../models');
+const Comment = models.Comment;
 const Post = models.Post;
 const User = models.User;
 const fs = require('fs');
 
 
-//Création d'un post
-exports.createPost = (req, res, next) => {
-    let imgUrl = "";
-    if(req.file) {
-        imgUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
-    }
-    const newPost = Post.create({
+//Création d'un commentaire
+exports.createComment = (req, res, next) => {
+    const newComment = Comment.create({
         userId: req.body.userId,
-        title: req.body.title,
-        description: req.body.description,
-        imageUrl: imgUrl
+        postId: req.body.postId,
+        comment: req.body.comment
     })
-        .then(() => res.status(201).json({ message: 'Post enregistré !'}))
+        .then(newComment => res.status(201).json({ message: 'Post enregistré !'}))
         .catch(error => res.status(400).json({error}));
 };
 
@@ -36,7 +32,7 @@ exports.modifyPost = (req, res, next) => {
     })
         .then(user => {
             if(user && (user.id == req.body.userId || user.isAdmin == true)) {
-                let imgUrl = "";
+                const imgUrl = "";
                 if(req.file) {
                     imgUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
                 }
@@ -46,7 +42,7 @@ exports.modifyPost = (req, res, next) => {
                         description: req.body.description,
                         imageUrl: imgUrl
                     },
-                    { where: {id: req.body.postId} }
+                    { where: {id: req.body.id} }
                 )
                     .then(() => res.status(201).json({ message: 'Post enregistré !'}))
                     .catch(error => res.status(400).json({error}));
@@ -72,31 +68,16 @@ exports.modifyPost = (req, res, next) => {
 
 // Suppression d'un post
 exports.deletePost = (req, res, next) => {
-    User.findOne({
-        where: {id: req.body.userId}
-    })
-        .then(user => {
-            if(user && (user.id == req.body.userId || user.isAdmin == true)) {
-                Post.findOne({ where: {id: req.body.postId}})
-                .then(post => {
-                    if(post.imageUrl != '') {
-                        const filename = post.imageUrl.split('/images/')[1];
-                        fs.unlink(`images/${filename}`, () => {
-                        Post.destroy({ where: {id: req.body.postId }})
-                            .then(() => res.status(200).json({message: 'Post supprimé !'}))
-                            .catch(error => res.status(400).json({error}));
-                    });
-                    }
-                    else {
-                        Post.destroy({ where: {id: req.body.postId }})
-                            .then(() => res.status(200).json({message: 'Post supprimé !'}))
-                            .catch(error => res.status(400).json({error}));
-                    }    
-                })
-                .catch(error => res.status(500).json({error}));
-            }
+    Post.findOne({id: req.params.id})
+        .then(post => {
+            const filename = post.imageUrl.split('/images/')[1];
+            fs.unlink(`images/${filename}`, () => {
+                Post.deleteOne({id: req.params.id})
+                    .then(() => res.status(200).json({message: 'Post supprimé !'}))
+                    .catch(error => res.status(400).json({error}));
+            });
         })
-    
+        .catch(error => res.status(500).json({error}));
 };
 
 // Récupération d'un post

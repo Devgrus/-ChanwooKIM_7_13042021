@@ -1,0 +1,85 @@
+<template>
+  <div>
+    <h1>{{ msg }}</h1>
+    <b-form @submit="sendPostForm" class="row">
+      <b-form-group
+        id="title-group"
+        label="Titre"
+        label-for="title"
+        class="col-12 col-md-6">
+        <b-form-input v-model="title" id="title"></b-form-input>
+      </b-form-group>
+      <b-form-group
+        id="description-group"
+        label="description"
+        label-for="description"
+        class="col-12 col-md-6">
+        <b-form-input v-model="description" id="description"></b-form-input>
+      </b-form-group>
+      <b-form-group
+        id="file-group"
+        label="image"
+        label-for="file"
+        class="col-12 col-md-6">
+        <b-form-file 
+            plain
+            v-model="file"
+            id="file"
+            ref="file-img"
+            @change="onChange"
+            accept="image/jpeg, image/png, image/gif"></b-form-file>
+      </b-form-group>
+      <div class="col-12">
+        <b-button type="submit" variant="primary">Post !</b-button>
+      </div>
+    </b-form>
+  </div>
+</template>
+
+<script>
+import axios from "axios";
+import router from "@/router"
+
+export default {
+  name: 'CreatePostBody',
+  props: {
+    msg: String
+  },
+  data() {
+    return {
+        title: '',
+        description: '',
+        file: null
+    }
+  },
+  methods: {
+    onChange(event){
+        this.file = event.target.files[0];
+        console.log(this.file);
+    },
+    sendPostForm(event) {
+      event.preventDefault()
+      const postData = new FormData();
+      postData.append("userId", localStorage.getItem("userId"));
+      postData.append("title", this.title);
+      postData.append("description", this.description);
+      postData.append("image", this.file);
+
+      axios.post("http://localhost:3000/api/posts", postData, {
+            headers: {"Authorization": "Bearer " + localStorage.getItem("token")}
+        })
+        .then(() => {
+            console.log("Everything works fine");
+            router.push({ path: '/home' });
+        })
+        .catch(error => console.log(error))
+    }
+  },
+  /*computed: {
+  }*/
+}
+</script>
+
+
+<style scoped lang="scss">
+</style>
