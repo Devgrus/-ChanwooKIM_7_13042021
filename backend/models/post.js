@@ -16,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
   };
   Post.init({
     userId: {
-      type: DataTypes.STRING,
+      type: DataTypes.INTEGER,
       allowNull: false,
       required: true
     },

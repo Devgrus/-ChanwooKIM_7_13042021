@@ -10,10 +10,11 @@ module.exports = {
       },
       postId: {
         type: Sequelize.INTEGER,
-        allowNull: false
+        allowNull: false,
+        require: true
       },
       userId: {
-        type: Sequelize.STRING,
+        type: Sequelize.INTEGER,
         allowNull: false,
         required: true
       },

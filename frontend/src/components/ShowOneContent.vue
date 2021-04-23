@@ -9,7 +9,7 @@
                 <img :src="post.imageUrl" v-if="post.imageUrl !== ''" alt="Image de l'utilisateur"/>
                 <p>Créé par : {{ post.User.userName }}</p>
                 <p>{{ post.description }}</p>
-                <div v-if="(post.userId == currentUserId) || isAdmin">
+                <div v-if="(post.userId == currentUserId) || isAdmin == true">
                     <b-button @click="goModifyPage(post.id)">modifier ce poste</b-button>
                     <b-button @click="deletePost(post.id)">Delete</b-button>
                 </div>
