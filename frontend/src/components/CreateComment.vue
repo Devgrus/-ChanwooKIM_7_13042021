@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import axios from "axios"
 import router from "@/router"
 
 export default {
@@ -33,17 +33,20 @@ export default {
   methods: {
     sendCommentForm(event) {
       event.preventDefault();
-      console.log(this.comment);
-      console.log(this.currentPostId)
       const commentData = new FormData();
       commentData.append("comment", this.comment);
       commentData.append("userId", this.currentUserId);
       commentData.append("postId", this.currentPostId);
+      for (const pair of commentData.entries()) {
+        console.log(pair[0]+', '+pair[1]);
+      }
       const data = {
           comment: this.comment,
           userId: this.currentUserId,
           postId : this.currentPostId
       }
+      console.log(this.currentUserId)
+      
       axios.post("http://localhost:3000/api/comments", data, {
             headers: {"Authorization": "Bearer " + localStorage.getItem("token")}
         })

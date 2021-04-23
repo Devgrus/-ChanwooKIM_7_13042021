@@ -7,6 +7,7 @@ const fs = require('fs');
 
 //Création d'un commentaire
 exports.createComment = (req, res, next) => {
+    console.log(req.body)
     const newComment = Comment.create({
         userId: req.body.userId,
         postId: req.body.postId,
