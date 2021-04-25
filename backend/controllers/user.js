@@ -6,6 +6,8 @@ const jwt = require('jsonwebtoken');
 
 const models = require('../models');
 const User = models.User;
+const Post = models.Post;
+const Comment = models.Comment;
 
 // Crpytage d'email
 const CryptoJS = require('crypto-js');
@@ -105,7 +107,8 @@ exports.login = (req, res, next) => {
 
 // Suppression d'un compte
 exports.deleteUser = (req, res, next) => {
-  User.findOne({email: cryptEmail(req.body.email)})
+  if(req.body.isAdmin == 'false') {
+    User.findOne({where: {email: cryptEmail(req.body.email)} })
       .then(user => {
       if (!user) {
         return res.status(401).json({error: 'Utilisateur introuvable !'});
@@ -115,10 +118,48 @@ exports.deleteUser = (req, res, next) => {
           if (!valid) {
             return res.status(401).json({error: 'Mot de passe incorrect !'});
           }
-          User.destory({ where : {email: cryptEmail(req.body.email)}})
+          User.destroy({ where : {email: cryptEmail(req.body.email)}})
             .then(() => res.status(200).json({message: 'Ce compte a été supprimé !'}))
+            .catch(error => res.status(400).json({error}));
+          Post.findAll({ where : {userId: user.id} })
+            .then(res => {
+              if(res) {
+                for(content of res) {
+                  console.log(content.dataValues.id);
+                  Comment.destroy({ where: {postId: content.dataValues.id} });
+                }
+              }
+            })
+            .catch(error => res.status(400).json({error}));
+          Post.destroy({ where : {userId: user.id} })
+            .then(() => res.status(200).json({message: 'Les posts de ce compte a été supprimé !'}))
+            .catch(error => res.status(400).json({error}));
+          Comment.destroy({ where : {userId: user.id} })
+            .then(() => res.status(200).json({message: 'Les commentaires de ce compte a été supprimé !'}))
             .catch(error => res.status(400).json({error}));
         })
         .catch(error => res.status(500).json({error}));
     })
+  }
+  else if(req.body.isAdmin == 'true') {
+    User.findOne({email: cryptEmail(req.body.email)})
+      .then(user => {
+      if (!user) {
+        return res.status(401).json({error: 'Utilisateur introuvable !'});
+      }
+      User.destroy({ where : {email: cryptEmail(req.body.email)}})
+        .then(() => res.status(200).json({message: 'Ce compte a été supprimé !'}))
+        .catch(error => res.status(400).json({error}));
+      Post.destroy({ where : {userId: user.id} })
+        .then(() => res.status(200).json({message: 'Les posts de ce compte a été supprimé !'}))
+        .catch(error => res.status(400).json({error}));
+      Comment.destroy({ where : {userId: user.id} })
+        .then(() => res.status(200).json({message: 'Les commentaires de ce compte a été supprimé !'}))
+        .catch(error => res.status(400).json({error}));
+    })
+      .catch(error => res.status(500).json({error}));
+  }
+  else {
+    return error => res.status(500).json({error})
+  }
 };

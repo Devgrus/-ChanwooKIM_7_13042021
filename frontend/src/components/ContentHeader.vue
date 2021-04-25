@@ -15,7 +15,7 @@
 <script>
 
 export default {
-  name: 'Login',
+  name: 'ContentHeader',
   props: {
     msg: String
   },

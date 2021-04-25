@@ -6,6 +6,8 @@ import Home from '../views/Home.vue'
 import CreatePost from '../views/CreatePost.vue'
 import Post from '../views/Post.vue'
 import ModifyPost from '../views/ModifyPost.vue'
+import ModifyComment from '../views/ModifyComment.vue'
+import DeleteAccount from '../views/DeleteAccount.vue'
 
 Vue.use(VueRouter)
 
@@ -40,6 +42,16 @@ const routes = [
     name: 'modify',
     component: ModifyPost
   },
+  {
+    path: '/modify_comment',
+    name: 'modifyComment',
+    component: ModifyComment
+  },
+  {
+    path: '/del_account',
+    name: 'deleteAccount',
+    component: DeleteAccount
+  }
 ]
 
 const router = new VueRouter({

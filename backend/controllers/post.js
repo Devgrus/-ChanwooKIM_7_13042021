@@ -1,5 +1,6 @@
 const models = require('../models');
 const Post = models.Post;
+const Comment = models.Comment;
 const User = models.User;
 const fs = require('fs');
 
@@ -73,7 +74,7 @@ exports.modifyPost = (req, res, next) => {
 // Suppression d'un post
 exports.deletePost = (req, res, next) => {
     User.findOne({
-        where: {id: req.body.userId}
+        where: {id: req.body.creater}
     })
         .then(user => {
             if(user && (user.id == req.body.userId || user.isAdmin == true)) {
@@ -85,11 +86,17 @@ exports.deletePost = (req, res, next) => {
                         Post.destroy({ where: {id: req.body.postId }})
                             .then(() => res.status(200).json({message: 'Post supprimé !'}))
                             .catch(error => res.status(400).json({error}));
+                        Comment.destroy({ where: {postId: req.body.postId} })
+                            .then(() => res.status(200).json({message: 'Commentaire supprimé !'}))
+                            .catch(error => res.status(400).json({error}));
                     });
                     }
                     else {
                         Post.destroy({ where: {id: req.body.postId }})
                             .then(() => res.status(200).json({message: 'Post supprimé !'}))
+                            .catch(error => res.status(400).json({error}));
+                        Comment.destroy({ where: {postId: req.body.postId} })
+                            .then(() => res.status(200).json({message: 'Commentaire supprimé !'}))
                             .catch(error => res.status(400).json({error}));
                     }    
                 })

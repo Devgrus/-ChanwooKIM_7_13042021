@@ -7,7 +7,6 @@ const fs = require('fs');
 
 //Création d'un commentaire
 exports.createComment = (req, res, next) => {
-    console.log(req.body)
     const newComment = Comment.create({
         userId: req.body.userId,
         postId: req.body.postId,
@@ -29,7 +28,7 @@ exports.modifyComment = (req, res, next) => {
                     {
                         comment: req.body.comment
                     },
-                    { where: {id: req.body.commentId} }
+                    { where: {id: req.params.id} }
                 )
                     .then(() => res.status(201).json({ message: 'Comment modifié !'}))
                     .catch(error => res.status(400).json({error}));
@@ -46,33 +45,53 @@ exports.deleteComment = (req, res, next) => {
         where: {id: req.body.userId}
     })
         .then(user => {
-            if(user && (user.id == req.body.userId || user.isAdmin == true)) {
-                Comment.findOne({ where: {id: req.body.commentId}})
-                    .then(comment => {
-                        Comment.destroy({ where: {id: req.body.commentId }})
+            console.log(user.id);
+            console.log(req.body.userId);
+            console.log(user.isAdmin);
+            console.log(user && (user.id == req.body.createrId || user.isAdmin == true));
+            if(user && (user.id == req.body.createrId || user.isAdmin == true)) {
+                Comment.findOne({ where: {id: req.params.id}})
+                    .then(() => {
+                        Comment.destroy({ where: {id: req.params.id }})
                             .then(() => res.status(200).json({message: 'Commentaire supprimé !'}))
                             .catch(error => res.status(400).json({error}));
                     })
                     .catch(error => res.status(400).json({error}));
             }
+            else {
+                res.status(401).json({ error: "Vous n'avez le droit de supprimer ce commentaire !" })
+            }
         })
         .catch(error => res.status(500).json({error}));
 };
 
+exports.getOneComment = (req, res, next) => {
+    Comment.findOne({
+        where: {id: req.params.id},
+        include: [{
+            model: User,
+            attributes: ['userName']
+        }]
+     })
+        .then(comment => res.status(200).json(comment))
+        .catch(error => res.status(404).json({error}));
+};
+
 // Récupération des commentaires
 exports.getComments = (req, res, next) => {
-    Comment.findOne({ 
+    Comment.findAll({ 
         where: {postId: req.params.postId},
-        //include: [{
-        //    model: User,
-        //    attributes: ['userName']
-        //}],
-        order: [['updatedAt', 'DESC']]
+        include: [{
+            model: User,
+            attributes: ['userName']
+        }],
+        order: [['createdAt', 'DESC']]
      })
-        .then(post => {
-            if(!post) {
+        .then(comment => {
+            if(!comment) {
                 return res.status(200).json({message: 'No Data'})
             }
+            res.status(200).json(comment)
         })
         .catch(error => res.status(500).json({error}));
     

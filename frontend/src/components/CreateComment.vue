@@ -17,7 +17,7 @@
 
 <script>
 import axios from "axios"
-import router from "@/router"
+//import router from "@/router"
 
 export default {
   name: 'CreateComment',
@@ -33,13 +33,6 @@ export default {
   methods: {
     sendCommentForm(event) {
       event.preventDefault();
-      const commentData = new FormData();
-      commentData.append("comment", this.comment);
-      commentData.append("userId", this.currentUserId);
-      commentData.append("postId", this.currentPostId);
-      for (const pair of commentData.entries()) {
-        console.log(pair[0]+', '+pair[1]);
-      }
       const data = {
           comment: this.comment,
           userId: this.currentUserId,
@@ -52,7 +45,8 @@ export default {
         })
         .then(() => {
             console.log("Everything works fine");
-            router.push({ path: '/home' });
+            //router.push({ path: `/post/?id=${this.currentPostId}` });
+            window.location.reload();
         })
         .catch(error => console.log(error.response.data.message))
     }

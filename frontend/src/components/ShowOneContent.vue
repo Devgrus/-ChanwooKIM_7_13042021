@@ -10,7 +10,7 @@
                 <p>Créé par : {{ post.User.userName }}</p>
                 <p>{{ post.description }}</p>
                 <div v-if="(post.userId == currentUserId) || isAdmin == true">
-                    <b-button @click="goModifyPage(post.id)">modifier ce poste</b-button>
+                    <b-button @click="goModifyPage(post)">modifier ce poste</b-button>
                     <b-button @click="deletePost(post.id)">Delete</b-button>
                 </div>
             </div>
@@ -48,12 +48,13 @@ export default {
     
     methods: {
         goModifyPage(event) {
-            router.push({ path: '/modify/?id=' + event })
+            router.push({ path: `/modify/?id=${event}` })
         },
         deletePost(event) {
             axios.delete(`http://localhost:3000/api/posts/${window.location.search.replace('?id=', '')}`, {
                 data: {
-                    postId: event,
+                    postId: event.id,
+                    creater: event.userId,
                     userId: this.currentUserId,
                 },
                 headers: {"Authorization": "Bearer " + localStorage.getItem("token")}

@@ -4,6 +4,7 @@
     <h1>Bienvenue chez Groupomania</h1>
     <CreatePostBtn />
     <ShowAllContents />
+    <Footer />
   </div>
 </template>
 
@@ -12,13 +13,15 @@
 import ContentHeader from '@/components/ContentHeader.vue'
 import CreatePostBtn from '@/components/CreatePostBtn.vue'
 import ShowAllContents from '@/components/ShowAllContents.vue'
+import Footer from '@/components/Footer.vue'
 
 export default {
   name: 'Home',
   components: {
     ContentHeader,
     CreatePostBtn,
-    ShowAllContents
+    ShowAllContents,
+    Footer
   }
 }
 </script>

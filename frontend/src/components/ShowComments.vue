@@ -7,6 +7,10 @@
             <div id="content" v-for="comment in comments" :key="comment.id">
                 <p>{{ comment.comment }}</p>
                 <p>{{ comment.User.userName }}</p>
+                <div v-if="comment.userId == currentUserId || isAdmin == true">
+                    <b-button @click="modifyComment(comment)">Modifier</b-button>
+                    <b-button @click="deleteComment(comment)">Supprimer</b-button>
+                </div>
             </div>
         </div>
     </div>
@@ -23,8 +27,8 @@ export default {
   },
   data() {
     return {
-        isAdmin: "",
-        comments: [],
+        isAdmin: localStorage.getItem('isAdmin'),
+        comments: "",
         currentUserId: localStorage.getItem('userId'),
         currentPostId: window.location.search.replace('?id=', '')
       }
@@ -34,7 +38,7 @@ export default {
                 headers: {"Authorization": "Bearer " + localStorage.getItem("token")}
         })
             .then((res) => {
-                if(res.data.message != "No Data") {
+                if(res && res.data.message != "No Data") {
                     this.comments = res.data;
                 }    
             })
@@ -42,9 +46,21 @@ export default {
     },
     
     methods: {
-        goPostPage(event) {
-            const postId = event
-            router.push({ path: '/post/?id=' + postId })
+        modifyComment(event) {
+            console.log(event.UserId);
+            router.push({path: '/modify_comment/?id=' + event.id})
+        },
+        deleteComment(event) {
+            console.log(event)
+            axios.delete(`http://localhost:3000/api/comments/${event.id}`, {
+                data: {
+                    postId: event.postId,
+                    userId: this.currentUserId,
+                },
+                headers: {"Authorization": "Bearer " + localStorage.getItem("token")}
+            })
+                .then(() => { console.log("good") })
+                .catch((error) => {console.log(error)})
         }
     },
     computed: {
