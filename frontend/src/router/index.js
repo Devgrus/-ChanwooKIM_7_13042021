@@ -15,48 +15,62 @@ const routes = [
   {
     path: '/',
     name: 'login',
-    component: Login
+    component: Login,
+    meta: {title: 'login'}
   },
   {
     path: '/signup',
     name: 'signup',
-    component: SignUp
+    component: SignUp,
+    meta: {title: 'sign up'}
   },
   {
     path: '/home',
     name: 'home',
-    component: Home
+    component: Home,
+    meta: {title: 'home'}
   },
   {
     path: '/create_post',
     name: 'createPost',
-    component: CreatePost
+    component: CreatePost,
+    meta: {title: 'create a post'}
   },
   {
     path: '/post',
     name: 'post',
-    component: Post
+    component: Post,
+    meta: {title: 'post'}
   },
   {
     path: '/modify',
     name: 'modify',
-    component: ModifyPost
+    component: ModifyPost,
+    meta: {title: 'edit post'}
   },
   {
     path: '/modify_comment',
     name: 'modifyComment',
-    component: ModifyComment
+    component: ModifyComment,
+    meta: {title: 'edit comment'}
   },
   {
     path: '/del_account',
     name: 'deleteAccount',
-    component: DeleteAccount
+    component: DeleteAccount,
+    meta: {title: 'delete account'}
   }
 ]
+
 
 const router = new VueRouter({
   routes,
   mode: 'history'
+})
+
+router.beforeEach((to, from, next) => {
+  document.title = `Groupomania | ${to.meta.title}`
+  next()
 })
 
 export default router
