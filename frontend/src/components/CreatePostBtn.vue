@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="my-3">
         <b-button variant="primary" @click="goCreatePostPage">+ Créer un post !</b-button>
     </div>
 </template>

@@ -1,15 +1,17 @@
 <template>
-    <div>
+    <div class="my-4">
         <div v-if="comments == ''">
-            <h2>Il n'y a pas encore de comentaire !</h2>
+            <h2 class="h4">Il n'y a pas encore de comentaire !</h2>
         </div>
-        <div v-else>
-            <div id="content" v-for="comment in comments" :key="comment.id">
+        <div v-else class="row mx-auto">
+            <div class="py-2 border col-12 col-md-8 mx-auto my-2"
+                v-for="comment in comments" 
+                :key="comment.id">
                 <p>{{ comment.comment }}</p>
-                <p>{{ comment.User.userName }}</p>
+                <p class="my-2">{{ comment.User.userName }}</p>
                 <div v-if="comment.userId == currentUserId || isAdmin == true">
-                    <b-button @click="modifyComment(comment)">Modifier</b-button>
-                    <b-button @click="deleteComment(comment)">Supprimer</b-button>
+                    <b-button @click="modifyComment(comment)" class="mx-2">Modifier</b-button>
+                    <b-button @click="deleteComment(comment)" variant="danger" class="mx-2">Supprimer</b-button>
                 </div>
             </div>
         </div>
@@ -40,6 +42,7 @@ export default {
             .then((res) => {
                 if(res && res.data.message != "No Data") {
                     this.comments = res.data;
+                    console.log(res.data)
                 }    
             })
             .catch(error => {console.log(error)})
@@ -47,19 +50,20 @@ export default {
     
     methods: {
         modifyComment(event) {
-            console.log(event.UserId);
             router.push({path: '/modify_comment/?id=' + event.id})
         },
         deleteComment(event) {
-            console.log(event)
             axios.delete(`http://localhost:3000/api/comments/${event.id}`, {
                 data: {
                     postId: event.postId,
                     userId: this.currentUserId,
+                    creater: event.userId
                 },
                 headers: {"Authorization": "Bearer " + localStorage.getItem("token")}
             })
-                .then(() => { console.log("good") })
+                .then(() => {
+                    window.location.reload();
+                })
                 .catch((error) => {console.log(error)})
         }
     },

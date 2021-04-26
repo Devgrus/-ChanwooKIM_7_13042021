@@ -1,26 +1,26 @@
 <template>
-  <div>
+  <div class="container">
     <h1>{{ msg }}</h1>
-    <b-form @submit="sendPostForm" class="row">
+    <b-form @submit="sendPostForm" class="row mx-auto">
       <b-form-group
         id="title-group"
         label="Titre"
         label-for="title"
-        class="col-12 col-md-6">
+        class="col-12 col-md-10 mx-auto">
         <b-form-input v-model="title" id="title"></b-form-input>
       </b-form-group>
       <b-form-group
         id="description-group"
         label="description"
         label-for="description"
-        class="col-12 col-md-6">
-        <b-form-input v-model="description" id="description"></b-form-input>
+        class="col-12 col-md-10 mx-auto">
+        <b-form-textarea v-model="description" id="description" rows="4"></b-form-textarea>
       </b-form-group>
       <b-form-group
         id="file-group"
         label="image"
         label-for="file"
-        class="col-12 col-md-6">
+        class="col-12 col-md-6 mx-auto">
         <b-form-file 
             plain
             v-model="file"
@@ -30,7 +30,7 @@
             accept="image/jpeg, image/png, image/gif"></b-form-file>
       </b-form-group>
       <div class="col-12">
-        <b-button type="submit" variant="primary">Post !</b-button>
+        <b-button type="submit" variant="primary">Poste !</b-button>
       </div>
     </b-form>
   </div>
@@ -64,7 +64,9 @@ export default {
       postData.append("title", this.title);
       postData.append("description", this.description);
       postData.append("image", this.file);
-
+      if(this.title == '') {
+        return alert("Veuillez saisir le titre de ce post !")
+      }
       axios.post("http://localhost:3000/api/posts", postData, {
             headers: {"Authorization": "Bearer " + localStorage.getItem("token")}
         })

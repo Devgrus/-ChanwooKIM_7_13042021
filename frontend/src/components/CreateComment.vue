@@ -1,12 +1,12 @@
 <template>
-  <div>
-    <b-form @submit="sendCommentForm" class="row">
+  <div class="my-4">
+    <b-form @submit="sendCommentForm" class="row mx-auto">
       <b-form-group
         id="comment-group"
         label="Commentaire"
         label-for="comment"
-        class="col-12 col-md-10">
-        <b-form-input v-model="comment" id="comment"></b-form-input>
+        class="col-12 col-md-8 mx-auto">
+        <b-form-textarea v-model="comment" id="comment"></b-form-textarea>
       </b-form-group>
       <div class="col-12">
         <b-button type="submit" variant="primary">OK</b-button>
@@ -45,7 +45,6 @@ export default {
         })
         .then(() => {
             console.log("Everything works fine");
-            //router.push({ path: `/post/?id=${this.currentPostId}` });
             window.location.reload();
         })
         .catch(error => console.log(error.response.data.message))

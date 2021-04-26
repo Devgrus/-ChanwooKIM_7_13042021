@@ -1,7 +1,7 @@
 <template>
   <div class="Home">
     <ContentHeader />
-    <h1>Bienvenue chez Groupomania</h1>
+    <h1 class="h2">Bienvenue !</h1>
     <CreatePostBtn />
     <ShowAllContents />
     <Footer />
@@ -25,3 +25,6 @@ export default {
   }
 }
 </script>
+
+<style scoped lang="scss">
+</style>

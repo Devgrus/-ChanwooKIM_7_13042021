@@ -1,14 +1,17 @@
 <template>
-    <div>
+    <div class="container">
         <div v-if="posts == ''">
-            <h2>Il n'y a pas encore de post !</h2>
+            <h2 class="h3">Il n'y a pas encore de post !</h2>
         </div>
-        <div v-else>
-            <div id="content" v-for="post in posts" :key="post.id">
-                <h2>{{ post.title }}</h2>
+        <div v-else class="row my-4 mainContent mx-auto">
+            <div
+                class="my-3 border col-12"
+                v-for="post in posts" 
+                :key="post.id">
+                <h2 class="h4 my-2">{{ post.title }}</h2>
                 <img :src="post.imageUrl" v-if="post.imageUrl !== ''" alt="Image de l'utilisateur"/>
                 <p>Créé par : {{ post.User.userName }}</p>
-                <b-button @click="goPostPage(post.id)">Commentaire</b-button>
+                <b-button @click="goPostPage(post.id)" class="mb-3">Voir le détail</b-button>
             </div>
         </div>
     </div>
@@ -55,4 +58,7 @@ export default {
 
 
 <style scoped lang="scss">
+.mainContent {
+    max-width: 768px;
+}
 </style>

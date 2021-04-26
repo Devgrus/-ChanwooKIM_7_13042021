@@ -1,5 +1,6 @@
 <template>
-    <header class="row d-flex align-items-center">
+    <header>
+      <div class="row d-flex align-items-center m-auto">
         <div class="col-12 col-md-7 d-flex justify-content-center justify-content-md-start">
             <img id="logo" alt="Logo Groupomania" src="../assets/icon-above-font.svg">
         </div>
@@ -8,6 +9,7 @@
             <router-link to="/">
             <span @click="logout">Déconnexion</span></router-link>
         </div>
+      </div>
     </header>
     
 </template>

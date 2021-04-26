@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="container">
     <h1>{{ msg }}</h1>
     <b-form @submit="sendLoginForm" class="row">
       <b-form-group
@@ -28,7 +28,7 @@ import axios from "axios";
 import router from "@/router"
 
 export default {
-  name: 'Login',
+  name: 'LoginBody',
   props: {
     msg: String
   },

@@ -1,19 +1,21 @@
 <template>
     <div>
         <div v-if="post == ''">
-            <h2>Il n'y a pas encore de post !</h2>
+            <h2>Ce post n'existe pas !</h2>
         </div>
         <div v-else>
             <div id="content">
-                <h2>{{ post.title }}</h2>
+                <h2 class="h3 my-3">{{ post.title }}</h2>
                 <img :src="post.imageUrl" v-if="post.imageUrl !== ''" alt="Image de l'utilisateur"/>
                 <p>Créé par : {{ post.User.userName }}</p>
                 <p>{{ post.description }}</p>
-                <div v-if="(post.userId == currentUserId) || isAdmin == true">
-                    <b-button @click="goModifyPage(post)">modifier ce poste</b-button>
-                    <b-button @click="deletePost(post.id)">Delete</b-button>
+                <div v-if="(post.userId == currentUserId) || isAdmin == 'true'">
+                    <b-button @click="goModifyPage(post)" class="mx-2">modifier ce poste</b-button>
+                    <b-button @click="deletePost(post)"  variant="danger" class="mx-2">Delete</b-button>
                 </div>
             </div>
+            <CreateComment />
+            <ShowComments />
         </div>
         
     </div>
@@ -22,9 +24,15 @@
 <script>
 import axios from "axios";
 import router from "@/router"
+import CreateComment from '@/components/CreateComment.vue'
+import ShowComments from '@/components/ShowComments.vue'
 
 export default {
   name: 'ShowOneContent',
+  components: {
+    CreateComment,
+    ShowComments
+  },
   props: {
     msg: String
   },
@@ -48,7 +56,7 @@ export default {
     
     methods: {
         goModifyPage(event) {
-            router.push({ path: `/modify/?id=${event}` })
+            router.push({ path: `/modify/?id=${event.id}` });
         },
         deletePost(event) {
             axios.delete(`http://localhost:3000/api/posts/${window.location.search.replace('?id=', '')}`, {
@@ -59,7 +67,10 @@ export default {
                 },
                 headers: {"Authorization": "Bearer " + localStorage.getItem("token")}
             })
-                .then(() => { console.log("good") })
+                .then(() => {
+                    console.log("Ce post a été supprimé !");
+                    router.push({ path: '/home' });
+                })
                 .catch((error) => {console.log(error)})
         }
     },
