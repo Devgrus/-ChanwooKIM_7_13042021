@@ -88,8 +88,7 @@ export default {
             router.push({ path : '/' });
           })
           .catch((error) => {
-            alert(error.response.data.message);
-            router.push({ name : 'login' });
+            alert(error.response.data.error);
           })
       }
 

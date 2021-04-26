@@ -43,7 +43,7 @@ exports.signup = (req, res, next) => {
                 userName: req.body.userName,
                 password: hash
               })
-              .then(newUser => res.status(201).json({message: 'Utilisateur a été créé !'}))
+              .then(() => res.status(201).json({message: 'Utilisateur a été créé !'}))
               .catch(error => res.status(500).json({error}))
             })
             .catch(error => res.status(500).json({error}))
@@ -72,7 +72,7 @@ exports.login = (req, res, next) => {
       bcrypt.compare(req.body.password, user.password)
         .then(valid => {
           if (!valid) {
-            return res.status(401).json({error: /*'Mot de passe incorrect !'*/ `${req.body.password}, ${user.password}`});
+            return res.status(401).json({error: 'Mot de passe incorrect !'});
           }
           res.status(200).json({
             userId: user.id,
