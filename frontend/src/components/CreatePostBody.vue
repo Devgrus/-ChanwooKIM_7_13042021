@@ -1,6 +1,5 @@
 <template>
   <div class="container">
-    <h1>{{ msg }}</h1>
     <b-form @submit="sendPostForm" class="row mx-auto">
       <b-form-group
         id="title-group"
@@ -30,7 +29,7 @@
             accept="image/jpeg, image/png, image/gif"></b-form-file>
       </b-form-group>
       <div class="col-12">
-        <b-button type="submit" variant="primary">Poste !</b-button>
+        <b-button type="submit" variant="dark">Poste !</b-button>
       </div>
     </b-form>
   </div>

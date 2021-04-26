@@ -14,7 +14,7 @@
                 :placeholder="comment"></b-form-input>
         </b-form-group>
         <div class="col-12">
-            <b-button type="submit" variant="primary">OK !</b-button>
+            <b-button type="submit" variant="dark">OK !</b-button>
         </div>
         </b-form>
     </div>

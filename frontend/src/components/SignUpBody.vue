@@ -42,7 +42,7 @@
         </b-form-valid-feedback>
       </b-form-group>
       <div class="col-12">
-        <b-button type="submit" variant="primary">Créer</b-button>
+        <b-button type="submit" variant="dark">Créer</b-button>
       </div>
     </b-form>
   </div>

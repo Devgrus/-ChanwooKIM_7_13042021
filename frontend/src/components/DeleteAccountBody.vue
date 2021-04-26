@@ -20,7 +20,7 @@
         <b-form-input v-model="AccountForm.password" id="password" type="password"></b-form-input>
       </b-form-group>
       <div class="col-12">
-        <b-button type="submit" variant="primary">Supprimer</b-button>
+        <b-button type="submit" variant="dark">Supprimer</b-button>
       </div>
     </b-form>
     <b-form 
@@ -35,7 +35,7 @@
         <b-form-input v-model="AccountForm.email" id="email"></b-form-input>
       </b-form-group>
       <div class="col-12">
-        <b-button type="submit" variant="primary">Supprimer</b-button>
+        <b-button type="submit" variant="dark">Supprimer</b-button>
       </div>
     </b-form>
   </div>

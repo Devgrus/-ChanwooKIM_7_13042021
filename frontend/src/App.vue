@@ -27,6 +27,7 @@ html {
     font-weight: bold;
     color: #2c3e50;
     padding: 0 1em 0 1em;
+    font-size: 20px;
 
     &.router-link-exact-active {
       color: #fd2d01;

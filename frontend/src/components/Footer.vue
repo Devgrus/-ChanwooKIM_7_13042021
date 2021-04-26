@@ -38,6 +38,10 @@ footer {
   min-height: 5em;
     & ul {
         list-style: none;
+
+        & li {
+            font-size: 24px;
+        }
     }
 }
 
