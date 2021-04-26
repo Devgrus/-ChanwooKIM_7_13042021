@@ -42,14 +42,10 @@ exports.modifyComment = (req, res, next) => {
 // Suppression d'un commentaire
 exports.deleteComment = (req, res, next) => {
     User.findOne({
-        where: {id: req.body.userId}
+        where: {id: req.body.creater}
     })
         .then(user => {
-            console.log(user.id);
-            console.log(req.body.userId);
-            console.log(user.isAdmin);
-            console.log(user && (user.id == req.body.createrId || user.isAdmin == true));
-            if(user && (user.id == req.body.createrId || user.isAdmin == true)) {
+            if(user && (user.id == req.body.userId || user.isAdmin == true)) {
                 Comment.findOne({ where: {id: req.params.id}})
                     .then(() => {
                         Comment.destroy({ where: {id: req.params.id }})

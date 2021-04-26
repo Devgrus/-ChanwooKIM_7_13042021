@@ -1,3 +1,5 @@
+const fs = require('fs');
+
 // Hachage de mot de passe
 const bcrypt = require('bcrypt');
 
@@ -24,7 +26,7 @@ exports.signup = (req, res, next) => {
   if (!req.body.email || !req.body.userName || !req.body.password) {
     return res.status(400).json({ message: "Vous n'avez pas saisir toutes les informations requises" })
   }
-  const RegexEmail = /^[a-z0-9](\.?[a-z0-9]){5,30}@groupomania\.com$/;
+  const RegexEmail = /^[a-z0-9](\.?[a-z0-9]){2,30}@groupomania\.com$/;
   const RegexUserName = /^[a-zA-Zéèçà$$âêîôûäëïöüÂÊÎÔÛÄËÏÖÜÀÆæÇÉÈŒœÙ]+(([',. -][a-zA-Zéèçà$$âêîôûäëïöüÂÊÎÔÛÄËÏÖÜÀÆæÇÉÈŒœÙ ])?[a-zA-Zéèçà$$âêîôûäëïöüÂÊÎÔÛÄËÏÖÜÀÆæÇÉÈŒœÙ]*)*$/;
   const RegexPassword = /^[A-Za-z0-9!@#$%^&*]{8,}$/;
   
@@ -58,24 +60,6 @@ exports.signup = (req, res, next) => {
   else {
     return console.log("Regex Error !");
   }
- 
-    /*let findUserExist = User.findOne({ where: { email: cryptEmail(req.body.email)}})
-    if(!findUserExist) {
-      bcrypt.hash(req.body.password, 10)
-        .then(hash => {
-          const newUser = User.create({
-            email: cryptEmail(req.body.email),
-            userName: req.body.userName,
-            password: hash
-          });
-        })
-        .then(() => res.status(201).json({message: 'Utilisateur a été créé !'}))
-        .catch(error => res.status(500).json({error}));
-    }
-    else {
-      res.status(422).json({message: 'Utilisateur existe déjà'})
-    }
-  }*/
 };
 
 // Login
@@ -110,52 +94,76 @@ exports.deleteUser = (req, res, next) => {
   if(req.body.isAdmin == 'false') {
     User.findOne({where: {email: cryptEmail(req.body.email)} })
       .then(user => {
-      if (!user) {
-        return res.status(401).json({error: 'Utilisateur introuvable !'});
-      }
-      bcrypt.compare(req.body.password, user.password)
-        .then(valid => {
-          if (!valid) {
-            return res.status(401).json({error: 'Mot de passe incorrect !'});
-          }
-          User.destroy({ where : {email: cryptEmail(req.body.email)}})
-            .then(() => res.status(200).json({message: 'Ce compte a été supprimé !'}))
-            .catch(error => res.status(400).json({error}));
-          Post.findAll({ where : {userId: user.id} })
-            .then(res => {
-              if(res) {
-                for(content of res) {
-                  console.log(content.dataValues.id);
-                  Comment.destroy({ where: {postId: content.dataValues.id} });
+        if (!user) {
+          return res.status(401).json({error: 'Utilisateur introuvable !'});
+        }
+        bcrypt.compare(req.body.password, user.password)
+          .then(valid => {
+            if (!valid) {
+              return res.status(401).json({error: 'Mot de passe incorrect !'});
+            }
+            User.destroy({ where : {email: cryptEmail(req.body.email)}})
+              .then(() => res.status(200).json({message: 'Ce compte a été supprimé !'}))
+              .catch(error => res.status(400).json({error}));
+            Comment.destroy({ where : {userId: user.id} })
+              .then(() => res.status(200).json({message: 'Les commentaires de ce compte a été supprimé !'}))
+              .catch(error => res.status(400).json({error}));
+            Post.findAll({ where : {userId: user.id} })
+              .then(res => {
+                if(res) {
+                  for(content of res) {
+                    Comment.destroy({ where: {postId: content.dataValues.id} });
+                    if(content.dataValues.imageUrl != '') {
+                      const filename = content.dataValues.imageUrl.split('/images/')[1];
+                      fs.unlink(`images/${filename}`, (err => {
+                        if(err) {
+                          console.log(err)
+                        }
+                      }))
+                    }
+                  }
                 }
-              }
-            })
-            .catch(error => res.status(400).json({error}));
-          Post.destroy({ where : {userId: user.id} })
-            .then(() => res.status(200).json({message: 'Les posts de ce compte a été supprimé !'}))
-            .catch(error => res.status(400).json({error}));
-          Comment.destroy({ where : {userId: user.id} })
-            .then(() => res.status(200).json({message: 'Les commentaires de ce compte a été supprimé !'}))
-            .catch(error => res.status(400).json({error}));
+              })
+              .catch(error => res.status(400).json({error}));
+            Post.destroy({ where : {userId: user.id} })
+              .then(() => res.status(200).json({message: 'Les posts de ce compte a été supprimé !'}))
+              .catch(error => res.status(400).json({error}));
         })
         .catch(error => res.status(500).json({error}));
     })
   }
   else if(req.body.isAdmin == 'true') {
-    User.findOne({email: cryptEmail(req.body.email)})
+    User.findOne({where: {email: cryptEmail(req.body.email)} })
       .then(user => {
-      if (!user) {
-        return res.status(401).json({error: 'Utilisateur introuvable !'});
-      }
-      User.destroy({ where : {email: cryptEmail(req.body.email)}})
-        .then(() => res.status(200).json({message: 'Ce compte a été supprimé !'}))
-        .catch(error => res.status(400).json({error}));
-      Post.destroy({ where : {userId: user.id} })
-        .then(() => res.status(200).json({message: 'Les posts de ce compte a été supprimé !'}))
-        .catch(error => res.status(400).json({error}));
-      Comment.destroy({ where : {userId: user.id} })
-        .then(() => res.status(200).json({message: 'Les commentaires de ce compte a été supprimé !'}))
-        .catch(error => res.status(400).json({error}));
+        if (!user) {
+          return res.status(401).json({error: 'Utilisateur introuvable !'});
+        }
+        User.destroy({ where : {email: cryptEmail(req.body.email)}})
+          .then(() => res.status(200).json({message: 'Ce compte a été supprimé !'}))
+          .catch(error => res.status(400).json({error}));
+        Comment.destroy({ where : {userId: user.id} })
+          .then(() => res.status(200).json({message: 'Les commentaires de ce compte a été supprimé !'}))
+          .catch(error => res.status(400).json({error}));
+        Post.findAll({ where : {userId: user.id} })
+          .then(res => {
+            if(res) {
+              for(content of res) {
+                Comment.destroy({ where: {postId: content.dataValues.id} });
+                if(content.dataValues.imageUrl != '') {
+                  const filename = content.dataValues.imageUrl.split('/images/')[1];
+                  fs.unlink(`images/${filename}`, (err => {
+                    if(err) {
+                      console.log(err)
+                    }
+                  }))
+                }
+              }
+            }
+          })
+          .catch(error => res.status(400).json({error}));
+        Post.destroy({ where : {userId: user.id} })
+          .then(() => res.status(200).json({message: 'Les posts de ce compte a été supprimé !'}))
+          .catch(error => res.status(400).json({error}));
     })
       .catch(error => res.status(500).json({error}));
   }

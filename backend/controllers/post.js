@@ -23,14 +23,6 @@ exports.createPost = (req, res, next) => {
 
 // Modification d'un post
 exports.modifyPost = (req, res, next) => {
-    /*const postObject = req.file ?
-        {
-            ...JSON.parse(req.body.post),
-            imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
-        } : {...req.body};
-    Post.updateOne({id: req.params.id}, { ...req.body, id: req.params.id})
-        .then(() => res.status(200).json({ message: 'Post modifié !'}))
-        .catch(error => res.status(400).json({error}));*/
     
     User.findOne({
         where: {id: req.body.userId}
@@ -40,35 +32,35 @@ exports.modifyPost = (req, res, next) => {
                 let imgUrl = "";
                 if(req.file) {
                     imgUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+                    Post.update(
+                        {
+                            title: req.body.title,
+                            description: req.body.description,
+                            imageUrl: imgUrl
+                        },
+                        { where: {id: req.body.postId} }
+                    )
+                        .then(() => res.status(201).json({ message: 'Post enregistré !'}))
+                        .catch(error => res.status(400).json({error}));
                 }
-                Post.update(
-                    {
-                        title: req.body.title,
-                        description: req.body.description,
-                        imageUrl: imgUrl
-                    },
-                    { where: {id: req.body.postId} }
-                )
-                    .then(() => res.status(201).json({ message: 'Post enregistré !'}))
-                    .catch(error => res.status(400).json({error}));
+                else {
+                    Post.update(
+                        {
+                            title: req.body.title,
+                            description: req.body.description,
+                        },
+                        { where: {id: req.body.postId} }
+                    )
+                        .then(() => res.status(201).json({ message: 'Post enregistré !'}))
+                        .catch(error => res.status(400).json({error}));
+                }
+                
+                
             }
             else {
                 res.status(401).json({ error: "Vous n'avez le droit de modifier ce post !" })
             }
         })
-    /*const imgUrl = "";
-    if(req.file) {
-        imgUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
-    }
-    
-    const post = Post.create({
-        userId: req.body.userId,
-        title: req.body.title,
-        description: req.body.description,
-        imageUrl: imgUrl
-    })
-        .then(() => res.status(201).json({ message: 'Post enregistré !'}))
-        .catch(error => res.status(400).json({error})); */
 };
 
 // Suppression d'un post
