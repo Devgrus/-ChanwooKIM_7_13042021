@@ -64,7 +64,7 @@ export default {
       postData.append("description", this.description);
       postData.append("image", this.file);
       if(this.title == '') {
-        return alert("Veuillez saisir le titre de ce post !")
+        return this.$vToastify.error("Veuillez saisir le titre de ce post !")
       }
       axios.post("http://localhost:3000/api/posts", postData, {
             headers: {"Authorization": "Bearer " + localStorage.getItem("token")}

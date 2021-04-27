@@ -50,7 +50,8 @@
 
 <script>
 import axios from "axios";
-import router from "@/router"
+import router from "@/router";
+
 const regexEmail = /^[a-z0-9](\.?[a-z0-9]){2,30}@groupomania\.com$/;
 const regexUserName = /^[a-zA-Zéèçà$$âêîôûäëïöüÂÊÎÔÛÄËÏÖÜÀÆæÇÉÈŒœÙ]+(([',. -][a-zA-Zéèçà$$âêîôûäëïöüÂÊÎÔÛÄËÏÖÜÀÆæÇÉÈŒœÙ ])?[a-zA-Zéèçà$$âêîôûäëïöüÂÊÎÔÛÄËÏÖÜÀÆæÇÉÈŒœÙ]*)*$/;
 const regexPassword = /^[A-Za-z0-9!@#$%^&*]{8,}$/;
@@ -74,7 +75,7 @@ export default {
     sendSignUpForm(event) {
       event.preventDefault()
       if (!this.signUpForm.email || !this.signUpForm.userName || !this.signUpForm.password) {
-        return alert("Vous n'avez pas saisir toutes les insignUpFormations requises")
+        return this.$vToastify.error("Vous n'avez pas saisir toutes les informations requises")
       }
 
       if (regexEmail.test(this.signUpForm.email) && regexUserName.test(this.signUpForm.userName) && regexPassword.test(this.signUpForm.password)) {
@@ -84,11 +85,11 @@ export default {
           password : this.signUpForm.password
         })
           .then(() => {
-            alert("Votre compte a été créé");
+            this.$vToastify.success("Votre compte a été créé");
             router.push({ path : '/' });
           })
-          .catch((error) => {
-            alert(error.response.data.error);
+          .catch(() => {
+            this.$vToastify.error("Erreur survenue !");
           })
       }
 

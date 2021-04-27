@@ -65,7 +65,7 @@ export default {
       event.preventDefault()
       if(this.isAdmin == 'false') {
         if (!this.AccountForm.email || !this.AccountForm.password) {
-          return alert("Saisissez l'email ou/et le mot de passe")
+          return this.$vToastify.warning("Saisissez l'email ou/et le mot de passe")
         }
         else {
         axios.delete("http://localhost:3000/api/auth/delete", {
@@ -77,18 +77,18 @@ export default {
           headers: {"Authorization": "Bearer " + localStorage.getItem("token")}
         })
           .then((res) => {
-            alert(res.data.message);
+            this.$vToastify.success(res.data.message);
             router.push({ path: '/' });
             localStorage.clear();
           })
           .catch((error) => {
-            alert(error.response.data.error);
+            this.$vToastify.error(error.response.data.error);
           })
         }
       }
       else if(this.isAdmin == 'true') {
         if (!this.AccountForm.email) {
-          return alert("Saisissez l'email ou/et le mot de passe")
+          return this.$vToastify.warning("Saisissez l'email ou/et le mot de passe")
         }
         else {
           axios.delete("http://localhost:3000/api/auth/delete", {
@@ -99,11 +99,11 @@ export default {
           headers: {"Authorization": "Bearer " + localStorage.getItem("token")}
         })
           .then((res) => {
-            alert(res.data.message);
+            this.$vToastify.success(res.data.message);
             router.push({ path: '/home' });
           })
           .catch((error) => {
-            alert(error.response.data.error);
+            this.$vToastify.error(error.response.data.error);
           })
         }
       }

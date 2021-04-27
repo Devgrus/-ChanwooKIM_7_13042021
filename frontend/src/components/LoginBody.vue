@@ -45,7 +45,7 @@ export default {
     sendLoginForm(event) {
       event.preventDefault()
       if (!this.loginForm.email || !this.loginForm.password) {
-        return alert("Saisissez votre email ou/et votre mot de passe")
+        return this.$vToastify.warning("Saisissez votre email ou/et votre mot de passe")
       }
 
       else {
@@ -59,8 +59,8 @@ export default {
             localStorage.setItem("isAdmin", res.data.isAdmin);
             router.push({ path: '/home' });
           })
-          .catch((error) => {
-            alert(error.response.data.error);
+          .catch(() => {
+            this.$vToastify.error("Erreur survenue");
           })
       }
     }
