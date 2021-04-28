@@ -9,7 +9,7 @@
                 :key="comment.id">
                 <p>{{ comment.comment }}</p>
                 <p class="my-2">{{ comment.User.userName }}</p>
-                <div v-if="comment.userId == currentUserId || isAdmin == true">
+                <div v-if="comment.userId == currentUserId || isAdmin == 'true'">
                     <b-button @click="modifyComment(comment)" class="mx-2">Modifier</b-button>
                     <b-button @click="deleteComment(comment)" variant="danger" class="mx-2">Supprimer</b-button>
                 </div>
