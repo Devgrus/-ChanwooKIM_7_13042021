@@ -11,7 +11,7 @@
                 <p>{{ post.description }}</p>
                 <div v-if="(post.userId == currentUserId) || isAdmin == 'true'">
                     <b-button @click="goModifyPage(post)" class="mx-2">modifier ce poste</b-button>
-                    <b-button @click="deletePost(post)"  variant="danger" class="mx-2">Delete</b-button>
+                    <b-button @click="deletePost(post)"  variant="danger" class="mx-2">Supprimer</b-button>
                 </div>
             </div>
             <CreateComment />

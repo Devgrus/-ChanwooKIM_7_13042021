@@ -26,9 +26,6 @@ export default {
         router.push({ path: '/create_post' });
     }
   },
-  /*computed: {
-    
-    }*/
 }
 </script>
 

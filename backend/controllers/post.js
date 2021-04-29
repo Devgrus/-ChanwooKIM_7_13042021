@@ -66,7 +66,7 @@ exports.modifyPost = (req, res, next) => {
 // Suppression d'un post
 exports.deletePost = (req, res, next) => {
     User.findOne({
-        where: {id: req.body.creater}
+        where: {id: req.body.userId}
     })
         .then(user => {
             if(user && (user.id == req.body.userId || user.isAdmin == true)) {

@@ -65,8 +65,6 @@ export default {
       }
     }
   },
-  /*computed: {
-  }*/
 }
 </script>
 

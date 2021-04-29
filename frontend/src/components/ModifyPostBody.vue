@@ -86,9 +86,6 @@ export default {
       postModifyData.append("description", this.description);
       postModifyData.append("postId", this.postId);
       postModifyData.append("image", this.file)
-      /*if(this.file != null) {
-          postModifyData.append("image", this.file);
-      }*/
       axios.put(`http://localhost:3000/api/posts/${window.location.search.replace('?id=', '')}`, postModifyData, {
             headers: {"Authorization": "Bearer " + localStorage.getItem("token")}
         })
@@ -99,8 +96,6 @@ export default {
         .catch(error => console.log(error))
     }
   },
-  /*computed: {
-  }*/
 }
 </script>
 
